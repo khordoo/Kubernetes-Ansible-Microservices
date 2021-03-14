@@ -1,0 +1,41 @@
+Resources:
+  myEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: spark
+      ImageId: ami-0ca5c3bd5a268e7db
+      InstanceType: t2.nano
+      SecurityGroupIds:
+        - !Ref secGroupName
+    #  UserData: !Base64 |
+    #    #!/bin/bash -ex
+    #    # put your script here
+      Tags:
+        - Key: Name
+          Value: Kubernetese
+  
+  secGroupName:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: Security grop for Kubernetes cluster
+      GroupDescription: Security Group for Kubernetese cluster
+      VpcId: vpc-a8810ad0
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65530
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: For Kuberneties 
+Exports:
+  ControlPanePublicIp:
+  Description: Public Ip of the Control Pane/Master node
+  Value: !GetAtt myEC2Instance.PublicIp
+  Export:
+    Name: KubernetesControlPanePublicIp

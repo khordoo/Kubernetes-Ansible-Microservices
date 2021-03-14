@@ -1,4 +1,4 @@
-FROM python
+FROM python:3.8-alpine
 
 RUN mkdir -p /opt/app/
 
@@ -6,8 +6,8 @@ WORKDIR /opt/app
 
 COPY . . 
 
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
-EXPOSE 3000
+EXPOSE 80
 
-CMD ["python3", "app.py"]
+ENTRYPOINT  ["python3", "app.py"]

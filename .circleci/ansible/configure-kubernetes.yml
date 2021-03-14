@@ -1,0 +1,4 @@
+hosts: all 
+user: ubuntu 
+roles: 
+  - configure-kubernetes

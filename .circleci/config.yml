@@ -38,6 +38,7 @@ jobs:
           command: |
             docker login -u $DOCKERHUB_USERNAME -p $DOCKER_HUB_PASSWORD
             docker  push $IMAGE_NAME:latest
+  
   create-master-node:
     environment:
       ANSIBLE_INVENTORY_PATH: /root/project/.circleci/ansible/inventory.txt
@@ -50,9 +51,9 @@ jobs:
           command: |    
               yum install tar gzip -y 
       - run:
-        name: "Deploy cloudformation stack" 
-        command: |             
-          aws cloudformation deploy --stack-name demo --template-file files/cluster.yaml 
+          name: "Deploy cloudformation stack" 
+          command: |             
+            aws cloudformation deploy --stack-name demo --template-file files/cluster.yaml 
       - run:
           name: "Add back-end ip to ansible inventory"
           command: |
@@ -72,12 +73,17 @@ jobs:
       - image: lexauw/ansible-alpine
     steps:
       - checkout 
+      - add_ssh_keys:
+          fingerprints: ["a5:c1:42:5d:4b:2c:12:c8:75:66:63:b5:75:77:2b:20"]
       - attach_workspace:
           at: ~/
       - run:
-          name: "Install dependencies" 
-          command: |     
-              cat .circleci/inventory.txt
+          name: "Install Munikube" 
+          command: |    
+              apk add curl  
+              curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+              install minikube-linux-amd64 /usr/local/bin/minikube
+              minikube version
 
 
 workflows:

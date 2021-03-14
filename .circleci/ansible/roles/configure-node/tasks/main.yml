@@ -1,26 +1,40 @@
-- name: "Install MiniKube"
+- name: "Install Dependencies"
   become: true 
-  shell: |  
+  become_user: root
+  shell: | 
       curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
       install minikube-linux-amd64 /usr/local/bin/minikube
       curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
       chmod +x ./kubectl
       mv ./kubectl /usr/local/bin/kubectl
-      snap install docker 
+      apt-get update -y
+      apt-get install docker.io conntrack socat -y
+   
       
 - name: "Start Minikube"
   become: true 
+  become_user: root
+  async: 300
+  poll: 5
   shell: |  
-      minikube start 
+      minikube start --vm-driver=none
+      minikube version
 
 - name: "Create Deployment"
   become: true 
+  become_user: root
   shell: |  
-      kubectl create deployment --image=khordoo/capstone capstone-app 
-      sleep 20 
+      swapoff -a
+      kubectl create deployment capstone-app --image=mkhordoo/capstone  --port=3000
+      kubectl wait  --for=condition=ready pod --all
+      sleep 5 
 
-- name: "Forwardport"
+- name: "Forward port"
   become: true 
+  become_user: root
   shell: |  
-    export POD_NAME=$(kubectl get pods --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')  
-    kubectl port-forward $POD_NAME 80:3000   
+    kubectl expose deployment capstone-app
+    kubectl wait  --for=condition=ready pod --all
+    sleep 60
+    nohup kubectl port-forward service/capstone-app --address 0.0.0.0   8080:3000 </dev/null >/dev/null 2>&1 &
+   

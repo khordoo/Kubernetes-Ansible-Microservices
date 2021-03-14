@@ -14,8 +14,12 @@ jobs:
           command: |
             docker --version
             docker build -t $IMAGE_NAME:latest . 
-
-
+      - run:
+          name: "Push to docker hub" 
+          command: |
+            docker login -u $DOCKERHUB_USERNAME -p $DOCKER_HUB_PASSWORD
+            docker  push $IMAGE_NAME:latest
+     
 workflows:
   # Name the workflow "welcome"
   welcome:

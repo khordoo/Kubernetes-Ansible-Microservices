@@ -4,7 +4,7 @@ Resources:
     Properties:
       KeyName: spark
       ImageId: ami-0ca5c3bd5a268e7db
-      InstanceType: t2.nano
+      InstanceType: t2.medium
       SecurityGroupIds:
         - !Ref secGroupName
     #  UserData: !Base64 |

@@ -1,0 +1,26 @@
+- name: "Install MiniKube"
+  become: true 
+  shell: |  
+      curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+      install minikube-linux-amd64 /usr/local/bin/minikube
+      curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+      chmod +x ./kubectl
+      mv ./kubectl /usr/local/bin/kubectl
+      snap install docker 
+      
+- name: "Start Minikube"
+  become: true 
+  shell: |  
+      minikube start 
+
+- name: "Create Deployment"
+  become: true 
+  shell: |  
+      kubectl create deployment --image=khordoo/capstone capstone-app 
+      sleep 20 
+
+- name: "Forwardport"
+  become: true 
+  shell: |  
+    export POD_NAME=$(kubectl get pods --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')  
+    kubectl port-forward $POD_NAME 80:3000   

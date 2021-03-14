@@ -1,0 +1,6 @@
+- name: "Configure Minikube"
+  hosts: all 
+  gather_facts: false
+  user: ubuntu 
+  roles: 
+    - configure-node

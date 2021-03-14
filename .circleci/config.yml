@@ -78,12 +78,9 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          name: "Install Munikube" 
+          name: "Config by Ansible"
           command: |    
-              apk add curl  
-              curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-              install minikube-linux-amd64 /usr/local/bin/minikube
-              minikube version
+              ansible-playbook -i .circleci/inventory.txt .circleci/ansible/configure-kubernetes.yml
 
 
 workflows:
@@ -94,8 +91,9 @@ workflows:
       # - lint
       # - build-publish-docker-image:
       #     requires: [lint]
-      # - create-master-node:
-      #    requires: [build-publish-docker-image]
       - create-master-node
+      #    requires: [build-publish-docker-image]
+      # - create-master-node:
+      #     requires: [create-master-node]
       - configure-master-node:
           requires: [create-master-node]

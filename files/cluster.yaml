@@ -33,9 +33,9 @@ Resources:
       Tags:
         - Key: Name
           Value: For Kuberneties 
-Exports:
+Outputs:
   ControlPanePublicIp:
-  Description: Public Ip of the Control Pane/Master node
-  Value: !GetAtt myEC2Instance.PublicIp
-  Export:
-    Name: KubernetesControlPanePublicIp
+    Description: Public Ip of the Control Pane/Master node
+    Value: !GetAtt myEC2Instance.PublicIp
+    Export:
+      Name: KubernetesControlPanePublicIp

@@ -106,13 +106,11 @@ jobs:
 workflows:
   kubernetese:
     jobs:
-      # - lint
-      # - build-publish-docker-image:
-      #     requires: [lint]
-      - create-master-node
-      #    requires: [build-publish-docker-image]
-      # - create-master-node:
-      #     requires: [create-master-node]
+      - lint
+      - build-publish-docker-image:
+          requires: [lint]
+      - create-master-node:
+          requires: [build-publish-docker-image]
       - configure-master-node:
           requires: [create-master-node]
       - cleanup:

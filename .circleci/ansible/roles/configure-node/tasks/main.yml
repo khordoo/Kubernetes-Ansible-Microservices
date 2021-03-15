@@ -36,5 +36,5 @@
     kubectl expose deployment capstone-app
     kubectl wait  --for=condition=ready pod --all
     sleep 60
-    nohup kubectl port-forward service/capstone-app --address 0.0.0.0   8080:3000 </dev/null >/dev/null 2>&1 &
+    nohup kubectl port-forward service/capstone-app --address 0.0.0.0   80:3000 </dev/null >/dev/null 2>&1 &
    

@@ -52,3 +52,9 @@ Outputs:
     Value: !GetAtt myEC2Instance.PublicIp
     Export:
       Name: !Sub KubernetesControlPanePublicIp-${ID}
+  
+  WorkflowId:
+    Value: !Ref ID
+    Description: Worflow Id used in Kubernetese stack
+    Export:
+      Name: !Sub WorkflowId-${ID}

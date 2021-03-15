@@ -12,12 +12,9 @@ Resources:
       InstanceType: t3a.small
       SecurityGroupIds:
         - !Ref secGroupName
-    #  UserData: !Base64 |
-    #    #!/bin/bash -ex
-    #    # put your script here
       Tags:
         - Key: Name
-          Value: Kubernetese
+          Value: !Sub Kubernetese-${ID}
   
   secGroupName:
     Type: AWS::EC2::SecurityGroup
